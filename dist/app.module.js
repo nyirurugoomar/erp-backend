@@ -14,6 +14,7 @@ const users_module_1 = require("./users/users.module");
 const config_1 = require("@nestjs/config");
 const mongoose_1 = require("@nestjs/mongoose");
 const items_module_1 = require("./items/items.module");
+const invoice_module_1 = require("./invoice/invoice.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -26,10 +27,11 @@ exports.AppModule = AppModule = __decorate([
             }),
             mongoose_1.MongooseModule.forRoot(process.env.DB_URI),
             users_module_1.UsersModule,
-            items_module_1.ItemsModule
+            items_module_1.ItemsModule,
+            invoice_module_1.InvoiceModule
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        providers: [app_service_1.AppService]
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

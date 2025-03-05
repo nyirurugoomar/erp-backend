@@ -32,6 +32,10 @@ __decorate([
 ], Item.prototype, "CurentQty", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true, unique: true }),
+    __metadata("design:type", Number)
+], Item.prototype, "itemPrice", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true, unique: true }),
     __metadata("design:type", String)
 ], Item.prototype, "itemImage", void 0);
 exports.Item = Item = __decorate([

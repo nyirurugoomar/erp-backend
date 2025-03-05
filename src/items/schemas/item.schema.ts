@@ -19,6 +19,9 @@ export class Item{
     CurentQty: number;
 
     @Prop({ required: true, unique: true })
+    itemPrice: number;
+
+    @Prop({ required: true, unique: true })
     itemImage: string;
 }
 export const ItemSchema = SchemaFactory.createForClass(Item)

@@ -3,6 +3,7 @@ export declare class Item {
     itemDescription: string;
     initialQty: number;
     CurentQty: number;
+    itemPrice: number;
     itemImage: string;
 }
 export declare const ItemSchema: import("mongoose").Schema<Item, import("mongoose").Model<Item, any, any, any, import("mongoose").Document<unknown, any, Item> & Item & {
