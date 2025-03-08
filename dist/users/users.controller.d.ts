@@ -7,11 +7,13 @@ export declare class UsersController {
     constructor(usersService: UsersService);
     createUser(createUserDto: CreateUserDto): Promise<{
         message: string;
+        token: string;
         user: User;
     }>;
     getUserById(id: string): Promise<User>;
     login(loginUserDto: LoginUserDto): Promise<{
         message: string;
+        token: string;
         user: User;
     }>;
     deleteUser(id: string): Promise<{

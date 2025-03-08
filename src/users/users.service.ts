@@ -5,21 +5,26 @@ import { User } from './schemas/user.schema';
 import * as bcrypt from 'bcryptjs';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class UsersService {
     constructor(
         @InjectModel(User.name)
         private userModel: Model<User>,
+        private jwtService: JwtService,
     ) {}
 
+    private generateToken(user: User): string {
+        return this.jwtService.sign({ email: user.email });
+    }
+
     // Create a new user
-    async createUser(dto: CreateUserDto): Promise<{ message: string; user: User }> {
+    async createUser(dto: CreateUserDto): Promise<{ message: string; token: string; user: User }> {
         const hashedPassword = await bcrypt.hash(dto.password, 10);
         const user = new this.userModel({ ...dto, password: hashedPassword });
-        const savedUser = await user.save()
-        return { message: 'User registered successfully', user: savedUser };
-
+        const savedUser = await user.save();
+        const token = this.generateToken(savedUser);
+        return { message: 'User registered successfully', token, user: savedUser };
     }
 
     // Find a user by email
@@ -35,14 +40,15 @@ export class UsersService {
     }
 
     // Validate user login
-    async validateUserCredentials(dto: LoginUserDto): Promise<{ message: string; user: User }> {
+    async validateUserCredentials(dto: LoginUserDto): Promise<{ message: string; token: string; user: User }> {
         const user = await this.findUserByEmail(dto.email);
         if (!user) throw new NotFoundException('User not found');
 
         const isPasswordValid = await bcrypt.compare(dto.password, user.password);
         if (!isPasswordValid) throw new UnauthorizedException('Invalid credentials');
 
-        return {message:'Login successfully',user}
+        const token = this.generateToken(user);
+        return { message: 'Login successfully', token, user };
     }
 
     // Delete a user by ID

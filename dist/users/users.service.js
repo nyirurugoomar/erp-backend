@@ -18,15 +18,21 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const user_schema_1 = require("./schemas/user.schema");
 const bcrypt = require("bcryptjs");
+const jwt_1 = require("@nestjs/jwt");
 let UsersService = class UsersService {
-    constructor(userModel) {
+    constructor(userModel, jwtService) {
         this.userModel = userModel;
+        this.jwtService = jwtService;
+    }
+    generateToken(user) {
+        return this.jwtService.sign({ email: user.email });
     }
     async createUser(dto) {
         const hashedPassword = await bcrypt.hash(dto.password, 10);
         const user = new this.userModel({ ...dto, password: hashedPassword });
         const savedUser = await user.save();
-        return { message: 'User registered successfully', user: savedUser };
+        const token = this.generateToken(savedUser);
+        return { message: 'User registered successfully', token, user: savedUser };
     }
     async findUserByEmail(email) {
         return this.userModel.findOne({ email }).exec();
@@ -44,7 +50,8 @@ let UsersService = class UsersService {
         const isPasswordValid = await bcrypt.compare(dto.password, user.password);
         if (!isPasswordValid)
             throw new common_1.UnauthorizedException('Invalid credentials');
-        return { message: 'Login successfully', user };
+        const token = this.generateToken(user);
+        return { message: 'Login successfully', token, user };
     }
     async deleteUser(id) {
         const result = await this.userModel.findByIdAndDelete(id).exec();
@@ -57,6 +64,7 @@ exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        jwt_1.JwtService])
 ], UsersService);
 //# sourceMappingURL=users.service.js.map
