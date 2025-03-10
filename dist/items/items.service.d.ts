@@ -4,13 +4,23 @@ import { CreateItemDto } from './dto/create-item.dto';
 export declare class ItemsService {
     private itemModel;
     constructor(itemModel: Model<Item>);
-    getAllItems(): Promise<Item[]>;
-    createItem(item: CreateItemDto): Promise<{
+    getAllItems(user: {
+        email: string;
+        name: string;
+    }): Promise<Item[]>;
+    createItem(item: CreateItemDto, user: {
+        name: string;
+        email: string;
+    }): Promise<{
         message: string;
         item: Item;
     }>;
-    getItemById(id: string): Promise<Item>;
-    updateItemById(id: string, item: Item): Promise<{
+    getItemById(id: string, user: {
+        email: string;
+    }): Promise<Item>;
+    updateItemById(id: string, item: Item, user: {
+        email: string;
+    }): Promise<{
         message: string;
         item: Item;
     }>;

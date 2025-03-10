@@ -23,5 +23,8 @@ export class Item{
 
     @Prop({ required: true, unique: true })
     itemImage: string;
+
+    @Prop({ required: true, type: Object }) 
+    createdBy: { name: string; email: string };
 }
 export const ItemSchema = SchemaFactory.createForClass(Item)

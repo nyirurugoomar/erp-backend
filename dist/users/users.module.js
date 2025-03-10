@@ -21,7 +21,7 @@ exports.UsersModule = UsersModule = __decorate([
         imports: [mongoose_1.MongooseModule.forFeature([{ name: 'User', schema: user_schema_1.UserSchema }]),
             jwt_1.JwtModule.register({
                 secret: 'JWT_SECRET',
-                signOptions: { expiresIn: '1day' },
+                signOptions: { expiresIn: '1h' },
             }),
         ],
         providers: [users_service_1.UsersService],

@@ -14,6 +14,9 @@ export class CreateItemDto{
 
     @IsNotEmpty()
     CurentQty: number;
+    
+    @IsNotEmpty()
+    itemPrice: number;
 
     @IsNotEmpty()
     itemImage: number;

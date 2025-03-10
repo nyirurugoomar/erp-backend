@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthGuard = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
+const dotenv = require("dotenv");
+dotenv.config();
 let AuthGuard = class AuthGuard {
     constructor(jwtService) {
         this.jwtService = jwtService;
@@ -20,16 +22,19 @@ let AuthGuard = class AuthGuard {
         const request = context.switchToHttp().getRequest();
         const authHeader = request.headers.authorization;
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            throw new common_1.UnauthorizedException('Unauthorized');
+            throw new common_1.UnauthorizedException('Unauthorized - No Bearer Token');
         }
         const token = authHeader.split(' ')[1];
         try {
-            const decoded = this.jwtService.verify(token);
+            const decoded = this.jwtService.verify(token, { secret: process.env.JWT_SECRET });
+            console.log('Decoded Token:', decoded);
             request.user = decoded;
+            request.name = decoded;
             return true;
         }
         catch (error) {
-            throw new common_1.UnauthorizedException('Invalid token');
+            console.error('JWT Error:', error.message);
+            throw new common_1.UnauthorizedException('Invalid or expired token');
         }
     }
 };

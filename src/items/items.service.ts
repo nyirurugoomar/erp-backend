@@ -11,12 +11,12 @@ export class ItemsService {
         private itemModel:Model<Item>
     ){}
 
-    async getAllItems(): Promise<Item[]>{
-        return await this.itemModel.find().exec();
+    async getAllItems(user: { email: string,name:string }): Promise<Item[]> {
+        return await this.itemModel.find({ 'createdBy.email': user.email }).exec();
     }
 
-    async createItem(item:CreateItemDto): Promise<{message:string; item:Item}>{
-        const createItem = await this.itemModel.create(item)
+    async createItem(item:CreateItemDto,user: { name: string; email: string }): Promise<{message:string; item:Item}>{
+        const createItem = await this.itemModel.create({ ...item, createdBy: user })
 
         return{
             message:'Item created successfully',
@@ -25,35 +25,28 @@ export class ItemsService {
     }
 
     // get item by ID
-    async getItemById(id: string): Promise<Item>{
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            throw new BadRequestException('Invalid ID format.');
-        }
-        const item = await this.itemModel
-        .findById(id)
-        .exec()
-
-        if(!item){
-            throw new NotFoundException('Item not found')
+    async getItemById(id: string, user: { email: string }): Promise<Item> {
+        const item = await this.itemModel.findOne({ _id: id, 'createdBy.email': user.email }).exec();
+        
+        if (!item) {
+            throw new NotFoundException('Item not found or not authorized');
         }
         return item;
     }
 
     // update item
-    async updateItemById(id:string,item:Item):Promise<{message:string;item:Item}>{
-        const updateItem = await this.itemModel.findByIdAndUpdate(id,item,{
-            new: true,
-            runValidators: true,
-        })
-
-        if(!updateItem){
-            throw new NotFoundException('Item not found')
+    async updateItemById(id: string, item: Item, user: { email: string }): Promise<{ message: string; item: Item }> {
+        const updatedItem = await this.itemModel.findOneAndUpdate(
+            { _id: id, 'createdBy.email': user.email }, 
+            item, 
+            { new: true, runValidators: true }
+        );
+    
+        if (!updatedItem) {
+            throw new NotFoundException('Item not found or not authorized');
         }
-
-        return{
-            message:'Item updated successfully',
-            item:updateItem
-        }
+    
+        return { message: 'Item updated successfully', item: updatedItem };
     }
 
     async deleteItemById(id:string):Promise<any>{

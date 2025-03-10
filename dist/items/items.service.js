@@ -21,40 +21,29 @@ let ItemsService = class ItemsService {
     constructor(itemModel) {
         this.itemModel = itemModel;
     }
-    async getAllItems() {
-        return await this.itemModel.find().exec();
+    async getAllItems(user) {
+        return await this.itemModel.find({ 'createdBy.email': user.email }).exec();
     }
-    async createItem(item) {
-        const createItem = await this.itemModel.create(item);
+    async createItem(item, user) {
+        const createItem = await this.itemModel.create({ ...item, createdBy: user });
         return {
             message: 'Item created successfully',
             item: createItem
         };
     }
-    async getItemById(id) {
-        if (!mongoose_2.default.Types.ObjectId.isValid(id)) {
-            throw new common_1.BadRequestException('Invalid ID format.');
-        }
-        const item = await this.itemModel
-            .findById(id)
-            .exec();
+    async getItemById(id, user) {
+        const item = await this.itemModel.findOne({ _id: id, 'createdBy.email': user.email }).exec();
         if (!item) {
-            throw new common_1.NotFoundException('Item not found');
+            throw new common_1.NotFoundException('Item not found or not authorized');
         }
         return item;
     }
-    async updateItemById(id, item) {
-        const updateItem = await this.itemModel.findByIdAndUpdate(id, item, {
-            new: true,
-            runValidators: true,
-        });
-        if (!updateItem) {
-            throw new common_1.NotFoundException('Item not found');
+    async updateItemById(id, item, user) {
+        const updatedItem = await this.itemModel.findOneAndUpdate({ _id: id, 'createdBy.email': user.email }, item, { new: true, runValidators: true });
+        if (!updatedItem) {
+            throw new common_1.NotFoundException('Item not found or not authorized');
         }
-        return {
-            message: 'Item updated successfully',
-            item: updateItem
-        };
+        return { message: 'Item updated successfully', item: updatedItem };
     }
     async deleteItemById(id) {
         const deleteItem = await this.itemModel.findByIdAndDelete(id);

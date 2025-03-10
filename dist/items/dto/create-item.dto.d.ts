@@ -3,5 +3,6 @@ export declare class CreateItemDto {
     itemDescription: string;
     initialQty: number;
     CurentQty: number;
+    itemPrice: number;
     itemImage: number;
 }

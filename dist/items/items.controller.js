@@ -17,21 +17,22 @@ const common_1 = require("@nestjs/common");
 const items_service_1 = require("./items.service");
 const item_schema_1 = require("./schemas/item.schema");
 const create_item_dto_1 = require("./dto/create-item.dto");
+const auth_guard_1 = require("../users/auth.guard");
 let ItemsController = class ItemsController {
     constructor(itemService) {
         this.itemService = itemService;
     }
-    async getAllItem() {
-        return await this.itemService.getAllItems();
+    async getAllItems(req) {
+        return await this.itemService.getAllItems(req.user);
     }
-    async createItem(createItem) {
-        return await this.itemService.createItem(createItem);
+    async createItem(createItem, req) {
+        return await this.itemService.createItem(createItem, req.user);
     }
-    async getItem(id) {
-        return await this.itemService.getItemById(id);
+    async getItem(id, req) {
+        return await this.itemService.getItemById(id, req.user);
     }
-    async updateItem(id, item) {
-        return this.itemService.updateItemById(id, item);
+    async updateItem(id, item, req) {
+        return this.itemService.updateItemById(id, item, req.user);
     }
     async deleteItem(id) {
         return await this.itemService.deleteItemById(id);
@@ -39,34 +40,43 @@ let ItemsController = class ItemsController {
 };
 exports.ItemsController = ItemsController;
 __decorate([
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], ItemsController.prototype, "getAllItem", null);
+], ItemsController.prototype, "getAllItems", null);
 __decorate([
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_item_dto_1.CreateItemDto]),
+    __metadata("design:paramtypes", [create_item_dto_1.CreateItemDto, Object]),
     __metadata("design:returntype", Promise)
 ], ItemsController.prototype, "createItem", null);
 __decorate([
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], ItemsController.prototype, "getItem", null);
 __decorate([
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, item_schema_1.Item]),
+    __metadata("design:paramtypes", [String, item_schema_1.Item, Object]),
     __metadata("design:returntype", Promise)
 ], ItemsController.prototype, "updateItem", null);
 __decorate([
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),

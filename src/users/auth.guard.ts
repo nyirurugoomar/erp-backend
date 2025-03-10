@@ -1,9 +1,14 @@
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import * as dotenv from 'dotenv';
+
+dotenv.config(); // Load environment variables
 
 interface AuthenticatedRequest extends Request {
-  user?: any; // Define the 'user' property explicitly
+  user?: any;
+  name?: any;
+
 }
 
 @Injectable()
@@ -15,16 +20,22 @@ export class AuthGuard implements CanActivate {
     const authHeader = request.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      throw new UnauthorizedException('Unauthorized');
+      throw new UnauthorizedException('Unauthorized - No Bearer Token');
     }
 
     const token = authHeader.split(' ')[1];
     try {
-      const decoded = this.jwtService.verify(token);
-      request.user = decoded; // Now TypeScript won't complain
+      
+
+      const decoded = this.jwtService.verify(token, { secret: process.env.JWT_SECRET });
+
+      console.log('Decoded Token:', decoded);
+      request.user = decoded;
+      request.name = decoded;
       return true;
     } catch (error) {
-      throw new UnauthorizedException('Invalid token');
+      console.error('JWT Error:', error.message);
+      throw new UnauthorizedException('Invalid or expired token');
     }
   }
 }

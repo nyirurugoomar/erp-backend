@@ -9,7 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
   imports:[MongooseModule.forFeature([{name:'User',schema:UserSchema}]),
   JwtModule.register({
     secret: 'JWT_SECRET', 
-    signOptions: { expiresIn: '1day' }, // Token expiry time
+    signOptions: { expiresIn: '1h' },
   }),
 ],
   providers: [UsersService],

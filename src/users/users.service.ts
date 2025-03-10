@@ -15,8 +15,7 @@ export class UsersService {
     ) {}
 
     private generateToken(user: User): string {
-        return this.jwtService.sign({ email: user.email });
-    }
+        return this.jwtService.sign({ email: user.email,name:user.name }, { secret: process.env.JWT_SECRET });    }
 
     // Create a new user
     async createUser(dto: CreateUserDto): Promise<{ message: string; token: string; user: User }> {

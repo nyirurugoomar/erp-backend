@@ -25,7 +25,7 @@ let UsersService = class UsersService {
         this.jwtService = jwtService;
     }
     generateToken(user) {
-        return this.jwtService.sign({ email: user.email });
+        return this.jwtService.sign({ email: user.email, name: user.name }, { secret: process.env.JWT_SECRET });
     }
     async createUser(dto) {
         const hashedPassword = await bcrypt.hash(dto.password, 10);

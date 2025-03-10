@@ -10,7 +10,7 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     // Create a new user
-    @UseGuards(AuthGuard)
+    // @UseGuards(AuthGuard)
     @Post('register')
     async createUser(@Body() createUserDto: CreateUserDto): Promise<{ message: string; token: string; user: User }> {
         return this.usersService.createUser(createUserDto);
@@ -24,7 +24,7 @@ export class UsersController {
     }
 
     // Validate login
-    @UseGuards(AuthGuard)
+    // @UseGuards(AuthGuard)
     @Post('login')
     async login(@Body() loginUserDto: LoginUserDto): Promise<{ message: string; token: string; user: User }> {
         return this.usersService.validateUserCredentials(loginUserDto);

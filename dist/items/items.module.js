@@ -12,12 +12,18 @@ const items_service_1 = require("./items.service");
 const items_controller_1 = require("./items.controller");
 const item_schema_1 = require("./schemas/item.schema");
 const mongoose_1 = require("@nestjs/mongoose");
+const jwt_1 = require("@nestjs/jwt");
 let ItemsModule = class ItemsModule {
 };
 exports.ItemsModule = ItemsModule;
 exports.ItemsModule = ItemsModule = __decorate([
     (0, common_1.Module)({
-        imports: [mongoose_1.MongooseModule.forFeature([{ name: 'Item', schema: item_schema_1.ItemSchema }])],
+        imports: [mongoose_1.MongooseModule.forFeature([{ name: 'Item', schema: item_schema_1.ItemSchema }]),
+            jwt_1.JwtModule.register({
+                secret: 'JWT_SECRET',
+                signOptions: { expiresIn: '1h' },
+            }),
+        ],
         providers: [items_service_1.ItemsService],
         controllers: [items_controller_1.ItemsController]
     })
