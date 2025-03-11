@@ -10,13 +10,9 @@ export declare class UsersController {
         token: string;
         user: User;
     }>;
-    getUserById(id: string): Promise<User>;
     login(loginUserDto: LoginUserDto): Promise<{
         message: string;
         token: string;
         user: User;
-    }>;
-    deleteUser(id: string): Promise<{
-        message: string;
     }>;
 }

@@ -18,6 +18,7 @@ const customer_service_1 = require("./customer.service");
 const create_customer_dto_1 = require("./dto/create-customer.dto");
 const customer_schema_1 = require("./schemas/customer.schema");
 const auth_guard_1 = require("../users/auth.guard");
+const swagger_1 = require("@nestjs/swagger");
 let CustomerController = class CustomerController {
     constructor(customerService) {
         this.customerService = customerService;
@@ -85,6 +86,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], CustomerController.prototype, "deleteCustomer", null);
 exports.CustomerController = CustomerController = __decorate([
+    (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Controller)('customer'),
     __metadata("design:paramtypes", [customer_service_1.CustomerService])
 ], CustomerController);

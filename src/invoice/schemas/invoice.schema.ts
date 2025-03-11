@@ -22,7 +22,7 @@ export class Invoice{
     customerPhone: string;
 
     @Prop({ required: true })
-    items: Array<{itemId: string,itemTitle:string, itemDescription: string,itemPrice:number}>;
+    items: Array<{itemId: string,itemTitle:string, itemDescription: string,itemPrice:number, CurentQty:number }>;
 
     @Prop({ required: true, type: Object }) 
     createdBy: { name: string; email: string };

@@ -3,8 +3,10 @@ import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { Customer } from './schemas/customer.schema';
 import { AuthGuard } from '../users/auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 
+@ApiBearerAuth()
 @Controller('customer')
 export class CustomerController {
     constructor(

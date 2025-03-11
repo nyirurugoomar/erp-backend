@@ -18,12 +18,16 @@ const items_service_1 = require("./items.service");
 const item_schema_1 = require("./schemas/item.schema");
 const create_item_dto_1 = require("./dto/create-item.dto");
 const auth_guard_1 = require("../users/auth.guard");
+const swagger_1 = require("@nestjs/swagger");
 let ItemsController = class ItemsController {
     constructor(itemService) {
         this.itemService = itemService;
     }
-    async getAllItems(req) {
-        return await this.itemService.getAllItems(req.user);
+    async getAllItems(req, search, page = 1, limit = 10) {
+        if (!req.user) {
+            throw new Error('User not found in request');
+        }
+        return this.itemService.getAllItems(req.user, search, Number(page), Number(limit));
     }
     async createItem(createItem, req) {
         return await this.itemService.createItem(createItem, req.user);
@@ -41,10 +45,12 @@ let ItemsController = class ItemsController {
 exports.ItemsController = ItemsController;
 __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
-    (0, common_1.Get)(),
     __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Query)('search')),
+    __param(2, (0, common_1.Query)('page')),
+    __param(3, (0, common_1.Query)('limit')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, String, Number, Number]),
     __metadata("design:returntype", Promise)
 ], ItemsController.prototype, "getAllItems", null);
 __decorate([
@@ -84,6 +90,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ItemsController.prototype, "deleteItem", null);
 exports.ItemsController = ItemsController = __decorate([
+    (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Controller)('items'),
     __metadata("design:paramtypes", [items_service_1.ItemsService])
 ], ItemsController);

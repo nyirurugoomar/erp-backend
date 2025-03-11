@@ -17,11 +17,11 @@ export class UsersController {
     }
 
     // Get user by ID
-    @UseGuards(AuthGuard)
-    @Get(':id')
-    async getUserById(@Param('id') id: string): Promise<User> {
-        return this.usersService.findUserById(id);
-    }
+    // @UseGuards(AuthGuard)
+    // @Get(':id')
+    // async getUserById(@Param('id') id: string): Promise<User> {
+    //     return this.usersService.findUserById(id);
+    // }
 
     // Validate login
     // @UseGuards(AuthGuard)
@@ -31,9 +31,9 @@ export class UsersController {
     }
 
     // Delete user by ID
-    @UseGuards(AuthGuard)
-    @Delete(':id')
-    async deleteUser(@Param('id') id: string): Promise<{ message: string }> {
-        return this.usersService.deleteUser(id);
-    }
+    // @UseGuards(AuthGuard)
+    // @Delete(':id')
+    // async deleteUser(@Param('id') id: string): Promise<{ message: string }> {
+    //     return this.usersService.deleteUser(id);
+    // }
 }

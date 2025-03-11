@@ -3,7 +3,9 @@ import { InvoiceService } from './invoice.service';
 import { Invoice } from './schemas/invoice.schema';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { AuthGuard } from '../users/auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('invoice')
 export class InvoiceController {
     constructor(

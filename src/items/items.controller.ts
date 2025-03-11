@@ -8,20 +8,31 @@ import {
   Put,
   UseGuards,
   Req,
+  Query
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { Item } from './schemas/item.schema';
 import { CreateItemDto } from './dto/create-item.dto';
 import { AuthGuard } from '../users/auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('items')
 export class ItemsController {
   constructor(private itemService: ItemsService) {}
 
+  
   @UseGuards(AuthGuard)
-  @Get()
-  async getAllItems(@Req() req): Promise<Item[]> {  // Log the user's name
-    return await this.itemService.getAllItems(req.user);
+  async getAllItems(
+    @Req() req: Request & { user?: { email: string; name: string } }, // Ensure user is defined
+    @Query('search') search?: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10
+  ) {
+    if (!req.user) {
+      throw new Error('User not found in request'); // Debugging step
+    }
+    return this.itemService.getAllItems(req.user, search, Number(page), Number(limit));
   }
 
   @UseGuards(AuthGuard)

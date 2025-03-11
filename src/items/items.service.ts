@@ -11,8 +11,27 @@ export class ItemsService {
         private itemModel:Model<Item>
     ){}
 
-    async getAllItems(user: { email: string,name:string }): Promise<Item[]> {
-        return await this.itemModel.find({ 'createdBy.email': user.email }).exec();
+    async getAllItems(
+        user: { email: string; name: string },
+        search?: string,
+        page: number = 1,
+        limit: number = 10
+    ): Promise<{ items: Item[]; total: number; page: number; totalPages: number }> {
+        const filter: any = { 'createdBy.email': user.email };
+        if (search) {
+            filter.name = { $regex: search, $options: 'i' }; // Case-insensitive search
+        }
+
+        const total = await this.itemModel.countDocuments(filter);
+        const totalPages = Math.ceil(total / limit);
+
+        const items = await this.itemModel
+            .find(filter)
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .exec();
+
+        return { items, total, page, totalPages };
     }
 
     async createItem(item:CreateItemDto,user: { name: string; email: string }): Promise<{message:string; item:Item}>{

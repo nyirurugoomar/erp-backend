@@ -18,6 +18,7 @@ const invoice_service_1 = require("./invoice.service");
 const invoice_schema_1 = require("./schemas/invoice.schema");
 const create_invoice_dto_1 = require("./dto/create-invoice.dto");
 const auth_guard_1 = require("../users/auth.guard");
+const swagger_1 = require("@nestjs/swagger");
 let InvoiceController = class InvoiceController {
     constructor(invoiceService) {
         this.invoiceService = invoiceService;
@@ -85,6 +86,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], InvoiceController.prototype, "deleteInvoice", null);
 exports.InvoiceController = InvoiceController = __decorate([
+    (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Controller)('invoice'),
     __metadata("design:paramtypes", [invoice_service_1.InvoiceService])
 ], InvoiceController);

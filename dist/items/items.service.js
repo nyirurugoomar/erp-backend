@@ -21,8 +21,19 @@ let ItemsService = class ItemsService {
     constructor(itemModel) {
         this.itemModel = itemModel;
     }
-    async getAllItems(user) {
-        return await this.itemModel.find({ 'createdBy.email': user.email }).exec();
+    async getAllItems(user, search, page = 1, limit = 10) {
+        const filter = { 'createdBy.email': user.email };
+        if (search) {
+            filter.name = { $regex: search, $options: 'i' };
+        }
+        const total = await this.itemModel.countDocuments(filter);
+        const totalPages = Math.ceil(total / limit);
+        const items = await this.itemModel
+            .find(filter)
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .exec();
+        return { items, total, page, totalPages };
     }
     async createItem(item, user) {
         const createItem = await this.itemModel.create({ ...item, createdBy: user });

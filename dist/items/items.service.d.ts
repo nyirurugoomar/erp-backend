@@ -7,7 +7,12 @@ export declare class ItemsService {
     getAllItems(user: {
         email: string;
         name: string;
-    }): Promise<Item[]>;
+    }, search?: string, page?: number, limit?: number): Promise<{
+        items: Item[];
+        total: number;
+        page: number;
+        totalPages: number;
+    }>;
     createItem(item: CreateItemDto, user: {
         name: string;
         email: string;

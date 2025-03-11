@@ -9,6 +9,7 @@ export declare class Invoice {
         itemTitle: string;
         itemDescription: string;
         itemPrice: number;
+        CurentQty: number;
     }>;
     createdBy: {
         name: string;
