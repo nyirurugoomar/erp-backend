@@ -7,10 +7,19 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ItemsModule } from './items/items.module';
 import { InvoiceModule } from './invoice/invoice.module';
 import { CustomerModule } from './customer/customer.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
 
   imports: [
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 5000,
+          limit: 4,
+        },
+      ],
+    }),
     ConfigModule.forRoot({
       envFilePath:'.env',
       isGlobal: true,

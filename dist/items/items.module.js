@@ -13,6 +13,8 @@ const items_controller_1 = require("./items.controller");
 const item_schema_1 = require("./schemas/item.schema");
 const mongoose_1 = require("@nestjs/mongoose");
 const jwt_1 = require("@nestjs/jwt");
+const core_1 = require("@nestjs/core");
+const throttler_1 = require("@nestjs/throttler");
 let ItemsModule = class ItemsModule {
 };
 exports.ItemsModule = ItemsModule;
@@ -24,7 +26,10 @@ exports.ItemsModule = ItemsModule = __decorate([
                 signOptions: { expiresIn: '1h' },
             }),
         ],
-        providers: [items_service_1.ItemsService],
+        providers: [items_service_1.ItemsService,
+            {
+                provide: core_1.APP_GUARD, useClass: throttler_1.ThrottlerGuard
+            }],
         controllers: [items_controller_1.ItemsController]
     })
 ], ItemsModule);

@@ -4,6 +4,8 @@ import { ItemsController } from './items.controller';
 import { ItemSchema } from './schemas/item.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Module({
   imports:[MongooseModule.forFeature([{name:'Item',schema:ItemSchema}]),
@@ -12,7 +14,9 @@ import { JwtModule } from '@nestjs/jwt';
     signOptions: { expiresIn: '1h' }, 
   }),
 ],
-  providers: [ItemsService],
+  providers: [ItemsService,
+  {
+  provide: APP_GUARD,useClass:ThrottlerGuard}],
   controllers:[ItemsController]
 })
 export class ItemsModule {}

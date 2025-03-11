@@ -13,6 +13,8 @@ const customer_controller_1 = require("./customer.controller");
 const mongoose_1 = require("@nestjs/mongoose");
 const customer_schema_1 = require("./schemas/customer.schema");
 const jwt_1 = require("@nestjs/jwt");
+const core_1 = require("@nestjs/core");
+const throttler_1 = require("@nestjs/throttler");
 let CustomerModule = class CustomerModule {
 };
 exports.CustomerModule = CustomerModule;
@@ -24,7 +26,9 @@ exports.CustomerModule = CustomerModule = __decorate([
                 signOptions: { expiresIn: '1h' },
             }),
         ],
-        providers: [customer_service_1.CustomerService],
+        providers: [customer_service_1.CustomerService,
+            { provide: core_1.APP_GUARD,
+                useClass: throttler_1.ThrottlerGuard }],
         controllers: [customer_controller_1.CustomerController]
     })
 ], CustomerModule);

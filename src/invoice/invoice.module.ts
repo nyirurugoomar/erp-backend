@@ -4,7 +4,8 @@ import { InvoiceService } from './invoice.service';
 import { InvoiceSchema } from './schemas/invoice.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
-
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard } from '@nestjs/throttler';
 @Module({
     imports:[MongooseModule.forFeature([{name:'Invoice',schema:InvoiceSchema}]),
     JwtModule.register({
@@ -13,6 +14,11 @@ import { JwtModule } from '@nestjs/jwt';
       }),
 ],
     controllers:[InvoiceController],
-    providers:[InvoiceService]
+    providers:[InvoiceService,
+        {
+        provide: APP_GUARD,
+        useClass: ThrottlerGuard
+
+    }]
 })
 export class InvoiceModule {}

@@ -13,6 +13,8 @@ const invoice_service_1 = require("./invoice.service");
 const invoice_schema_1 = require("./schemas/invoice.schema");
 const mongoose_1 = require("@nestjs/mongoose");
 const jwt_1 = require("@nestjs/jwt");
+const core_1 = require("@nestjs/core");
+const throttler_1 = require("@nestjs/throttler");
 let InvoiceModule = class InvoiceModule {
 };
 exports.InvoiceModule = InvoiceModule;
@@ -25,7 +27,11 @@ exports.InvoiceModule = InvoiceModule = __decorate([
             }),
         ],
         controllers: [invoice_controller_1.InvoiceController],
-        providers: [invoice_service_1.InvoiceService]
+        providers: [invoice_service_1.InvoiceService,
+            {
+                provide: core_1.APP_GUARD,
+                useClass: throttler_1.ThrottlerGuard
+            }]
     })
 ], InvoiceModule);
 //# sourceMappingURL=invoice.module.js.map

@@ -16,12 +16,21 @@ const mongoose_1 = require("@nestjs/mongoose");
 const items_module_1 = require("./items/items.module");
 const invoice_module_1 = require("./invoice/invoice.module");
 const customer_module_1 = require("./customer/customer.module");
+const throttler_1 = require("@nestjs/throttler");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            throttler_1.ThrottlerModule.forRoot({
+                throttlers: [
+                    {
+                        ttl: 5000,
+                        limit: 4,
+                    },
+                ],
+            }),
             config_1.ConfigModule.forRoot({
                 envFilePath: '.env',
                 isGlobal: true,
