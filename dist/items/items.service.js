@@ -34,7 +34,7 @@ let ItemsService = class ItemsService {
     async getItemById(id, user) {
         const item = await this.itemModel.findOne({ _id: id, 'createdBy.email': user.email }).exec();
         if (!item) {
-            throw new common_1.NotFoundException('Item not found or not authorized');
+            throw new common_1.NotFoundException('Item not found');
         }
         return item;
     }

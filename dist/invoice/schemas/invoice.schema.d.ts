@@ -10,6 +10,10 @@ export declare class Invoice {
         itemDescription: string;
         itemPrice: number;
     }>;
+    createdBy: {
+        name: string;
+        email: string;
+    };
 }
 export declare const InvoiceSchema: import("mongoose").Schema<Invoice, import("mongoose").Model<Invoice, any, any, any, import("mongoose").Document<unknown, any, Invoice> & Invoice & {
     _id: import("mongoose").Types.ObjectId;

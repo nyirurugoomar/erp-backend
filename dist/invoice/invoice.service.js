@@ -21,28 +21,28 @@ let InvoiceService = class InvoiceService {
     constructor(invoiceModel) {
         this.invoiceModel = invoiceModel;
     }
-    async getAllInvoice() {
-        return await this.invoiceModel.find().exec();
+    async getAllInvoice(user) {
+        return await this.invoiceModel.find({ 'createdBy': user.email }).exec();
     }
-    async createInvoice(invoice) {
-        const createInvoice = await this.invoiceModel.create(invoice);
+    async createInvoice(invoice, user) {
+        const createInvoice = await this.invoiceModel.create({ ...invoice, createdBy: user.email });
         return {
             message: 'Invoice created successfully',
             invoice: createInvoice
         };
     }
-    async getInvoice(id) {
+    async getInvoice(id, user) {
         if (!mongoose_1.default.Types.ObjectId.isValid(id)) {
             throw new common_1.BadRequestException('Invalid ID format');
         }
-        const invoice = await this.invoiceModel.findById(id).exec();
+        const invoice = await this.invoiceModel.findById({ _id: id, 'createdBy.email': user.email }).exec();
         if (!invoice) {
             throw new common_1.BadRequestException('Invoice not found');
         }
         return invoice;
     }
-    async updateInvoiceById(id, invoice) {
-        const updateInvoice = await this.invoiceModel.findByIdAndUpdate(id, invoice, {
+    async updateInvoiceById(id, invoice, user) {
+        const updateInvoice = await this.invoiceModel.findByIdAndUpdate({ _id: id, 'createdBy.email': user.email }, invoice, {
             new: true,
             runValidators: true
         });
@@ -54,8 +54,8 @@ let InvoiceService = class InvoiceService {
             invoice: updateInvoice
         };
     }
-    async deleteInvoiceById(id) {
-        const deleteInvoice = await this.invoiceModel.findByIdAndDelete(id);
+    async deleteInvoiceById(id, user) {
+        const deleteInvoice = await this.invoiceModel.findByIdAndDelete({ id, 'createdBy.email': user.email }).exec();
         if (!deleteInvoice) {
             throw new common_1.BadRequestException('Invoice not found');
         }

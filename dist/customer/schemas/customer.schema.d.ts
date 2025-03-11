@@ -4,6 +4,10 @@ export declare class Customer {
     customerAddress: string;
     customerPhone: number;
     customerImage: string;
+    createdBy: {
+        name: string;
+        email: string;
+    };
 }
 export declare const CustomerSchema: import("mongoose").Schema<Customer, import("mongoose").Model<Customer, any, any, any, import("mongoose").Document<unknown, any, Customer> & Customer & {
     _id: import("mongoose").Types.ObjectId;

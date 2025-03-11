@@ -21,28 +21,34 @@ let CustomerService = class CustomerService {
     constructor(customerModel) {
         this.customerModel = customerModel;
     }
-    async findAll() {
-        return this.customerModel.find().exec();
+    async getAllCustomer(user) {
+        try {
+            return await this.customerModel.find({ createdBy: user.email }).exec();
+        }
+        catch (error) {
+            console.error('Error fetching customers:', error);
+            throw new common_1.BadRequestException('Failed to fetch customers');
+        }
     }
-    async createCustomer(customer) {
-        const createCustomer = await this.customerModel.create(customer);
+    async createCustomer(customer, user) {
+        const createCustomer = await this.customerModel.create({ ...customer, createdBy: user.email });
         return {
             message: 'Customer created successfully',
             customer: createCustomer
         };
     }
-    async getCustomer(id) {
+    async getCustomer(id, user) {
         if (!mongoose_1.default.Types.ObjectId.isValid(id)) {
             throw new common_1.BadRequestException('Invalid ID format');
         }
-        const customer = await this.customerModel.findById(id).exec();
+        const customer = await this.customerModel.findById({ _id: id, 'createdBy.email': user.email }).exec();
         if (!customer) {
             throw new common_1.BadRequestException('Customer not found');
         }
         return customer;
     }
-    async updateCustomerById(id, customer) {
-        const updateCustomer = await this.customerModel.findByIdAndUpdate(id, customer, {
+    async updateCustomerById(id, customer, user) {
+        const updateCustomer = await this.customerModel.findByIdAndUpdate({ _id: id, 'createdBy.email': user.email }, customer, {
             new: true,
             runValidators: true
         });

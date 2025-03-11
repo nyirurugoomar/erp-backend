@@ -11,11 +11,11 @@ export class InvoiceService {
         private invoiceModel:Model<Invoice>
     ){}
 
-    async getAllInvoice():Promise<Invoice[]>{
-        return await this.invoiceModel.find().exec()
+    async getAllInvoice(user:{email:string,name:string}):Promise<Invoice[]>{
+        return await this.invoiceModel.find({'createdBy': user.email}).exec()
     }
-    async createInvoice(invoice:CreateInvoiceDto):Promise<{message:string; invoice:Invoice}>{
-        const createInvoice = await this.invoiceModel.create(invoice)
+    async createInvoice(invoice:CreateInvoiceDto,user:{name:string; email:string}):Promise<{message:string; invoice:Invoice}>{
+        const createInvoice = await this.invoiceModel.create({ ...invoice,createdBy:user.email})
 
         return {
             message:'Invoice created successfully',
@@ -23,18 +23,18 @@ export class InvoiceService {
         }
     }
 
-    async getInvoice(id:string):Promise<Invoice>{
+    async getInvoice(id:string,user:{email:string}):Promise<Invoice>{
         if(!mongoose.Types.ObjectId.isValid(id)){
             throw new BadRequestException('Invalid ID format')
         }
-        const invoice = await this.invoiceModel.findById(id).exec()
+        const invoice = await this.invoiceModel.findById({_id:id, 'createdBy.email': user.email}).exec()
         if(!invoice){
             throw new BadRequestException('Invoice not found')
         }
         return invoice
     }
-    async updateInvoiceById(id:string,invoice:Invoice):Promise<{message:string;invoice:Invoice}>{
-        const updateInvoice = await this.invoiceModel.findByIdAndUpdate(id,invoice,{
+    async updateInvoiceById(id:string,invoice:Invoice,user:{email:string}):Promise<{message:string;invoice:Invoice}>{
+        const updateInvoice = await this.invoiceModel.findByIdAndUpdate({_id:id,'createdBy.email':user.email},invoice,{
             new:true,
             runValidators:true
         })
@@ -48,8 +48,8 @@ export class InvoiceService {
         }
     }
 
-    async deleteInvoiceById(id:string):Promise<any>{
-        const deleteInvoice = await this.invoiceModel.findByIdAndDelete(id)
+    async deleteInvoiceById(id:string,user:{email:string}):Promise<any>{
+        const deleteInvoice = await this.invoiceModel.findByIdAndDelete({id,'createdBy.email':user.email}).exec()
         if(!deleteInvoice){
             throw new BadRequestException('Invoice not found')
         }

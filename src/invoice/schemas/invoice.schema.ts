@@ -24,6 +24,10 @@ export class Invoice{
     @Prop({ required: true })
     items: Array<{itemId: string,itemTitle:string, itemDescription: string,itemPrice:number}>;
 
+    @Prop({ required: true, type: Object }) 
+    createdBy: { name: string; email: string };
+
+
 
 
 }

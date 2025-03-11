@@ -29,7 +29,7 @@ export class ItemsService {
         const item = await this.itemModel.findOne({ _id: id, 'createdBy.email': user.email }).exec();
         
         if (!item) {
-            throw new NotFoundException('Item not found or not authorized');
+            throw new NotFoundException('Item not found');
         }
         return item;
     }

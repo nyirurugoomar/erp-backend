@@ -34,6 +34,10 @@ __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
 ], Customer.prototype, "customerImage", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: Object }),
+    __metadata("design:type", Object)
+], Customer.prototype, "createdBy", void 0);
 exports.Customer = Customer = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

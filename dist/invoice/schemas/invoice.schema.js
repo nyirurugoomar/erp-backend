@@ -38,6 +38,10 @@ __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", Array)
 ], Invoice.prototype, "items", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: Object }),
+    __metadata("design:type", Object)
+], Invoice.prototype, "createdBy", void 0);
 exports.Invoice = Invoice = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

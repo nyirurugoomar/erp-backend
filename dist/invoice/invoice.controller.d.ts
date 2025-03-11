@@ -4,15 +4,15 @@ import { CreateInvoiceDto } from './dto/create-invoice.dto';
 export declare class InvoiceController {
     private invoiceService;
     constructor(invoiceService: InvoiceService);
-    getAllItem(): Promise<Invoice[]>;
-    createInvoice(createInvoice: CreateInvoiceDto): Promise<{
+    getAllItem(req: any): Promise<Invoice[]>;
+    createInvoice(createInvoice: CreateInvoiceDto, req: any): Promise<{
         message: string;
         invoice: Invoice;
     }>;
-    getInvoice(id: string): Promise<Invoice>;
-    updateInvoice(id: string, invoice: Invoice): Promise<{
+    getInvoice(id: string, req: any): Promise<Invoice>;
+    updateInvoice(id: string, invoice: Invoice, req: any): Promise<{
         message: string;
         invoice: Invoice;
     }>;
-    deleteInvoice(id: string): Promise<any>;
+    deleteInvoice(req: any, id: string): Promise<any>;
 }

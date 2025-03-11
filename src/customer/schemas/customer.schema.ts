@@ -20,5 +20,10 @@ export class Customer{
     
         @Prop({ required: true })
         customerImage: string;
+
+        @Prop({ required: true, type: Object }) 
+        createdBy: { name: string; email: string };
+
+
 }
 export const CustomerSchema = SchemaFactory.createForClass(Customer);
