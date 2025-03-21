@@ -20,7 +20,4 @@ export declare class UsersService {
         token: string;
         user: User;
     }>;
-    deleteUser(id: string): Promise<{
-        message: string;
-    }>;
 }

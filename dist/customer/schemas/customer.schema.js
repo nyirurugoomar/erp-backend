@@ -11,26 +11,42 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CustomerSchema = exports.Customer = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
+const swagger_1 = require("@nestjs/swagger");
 let Customer = class Customer {
 };
 exports.Customer = Customer;
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Customer Name'
+    }),
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
 ], Customer.prototype, "customerName", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Customer Email'
+    }),
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
 ], Customer.prototype, "customerEmail", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Customer Address'
+    }),
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
 ], Customer.prototype, "customerAddress", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Customer Number'
+    }),
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", Number)
 ], Customer.prototype, "customerPhone", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Customer Image'
+    }),
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
 ], Customer.prototype, "customerImage", void 0);

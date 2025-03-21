@@ -53,12 +53,6 @@ let UsersService = class UsersService {
         const token = this.generateToken(user);
         return { message: 'Login successfully', token, user };
     }
-    async deleteUser(id) {
-        const result = await this.userModel.findByIdAndDelete(id).exec();
-        if (!result)
-            throw new common_1.NotFoundException('User not found');
-        return { message: 'User deleted successfully' };
-    }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([

@@ -24,7 +24,7 @@ export class ItemsController {
   
   @UseGuards(AuthGuard)
   async getAllItems(
-    @Req() req: Request & { user?: { email: string; name: string } }, // Ensure user is defined
+    @Req() req: Request & { user?: { email: string; name: string } },
     @Query('search') search?: string,
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10

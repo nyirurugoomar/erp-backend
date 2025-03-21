@@ -11,30 +11,49 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ItemSchema = exports.Item = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
+const swagger_1 = require("@nestjs/swagger");
 let Item = class Item {
 };
 exports.Item = Item;
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Item Title'
+    }),
     (0, mongoose_1.Prop)({ required: true, unique: true }),
     __metadata("design:type", String)
 ], Item.prototype, "itemTitle", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Item Description'
+    }),
     (0, mongoose_1.Prop)({ required: true, unique: true }),
     __metadata("design:type", String)
 ], Item.prototype, "itemDescription", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Item Initial Quantity'
+    }),
     (0, mongoose_1.Prop)({ required: true, unique: true }),
     __metadata("design:type", Number)
 ], Item.prototype, "initialQty", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Item Current Quantity'
+    }),
     (0, mongoose_1.Prop)({ required: true, unique: true }),
     __metadata("design:type", Number)
 ], Item.prototype, "CurentQty", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Item Price'
+    }),
     (0, mongoose_1.Prop)({ required: true, unique: true }),
     __metadata("design:type", Number)
 ], Item.prototype, "itemPrice", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Item Image'
+    }),
     (0, mongoose_1.Prop)({ required: true, unique: true }),
     __metadata("design:type", String)
 ], Item.prototype, "itemImage", void 0);

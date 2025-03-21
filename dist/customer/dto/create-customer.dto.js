@@ -11,30 +11,46 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateCustomerDto = void 0;
 const class_validator_1 = require("class-validator");
+const swagger_1 = require("@nestjs/swagger");
 class CreateCustomerDto {
 }
 exports.CreateCustomerDto = CreateCustomerDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Customer Name'
+    }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateCustomerDto.prototype, "customerName", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Customer Email'
+    }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateCustomerDto.prototype, "customerEmail", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Customer Address'
+    }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateCustomerDto.prototype, "customerAddress", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Customer Phone'
+    }),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)
 ], CreateCustomerDto.prototype, "customerPhone", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Customer Image'
+    }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)

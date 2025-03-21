@@ -11,32 +11,51 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateItemDto = void 0;
 const class_validator_1 = require("class-validator");
+const swagger_1 = require("@nestjs/swagger");
 class CreateItemDto {
 }
 exports.CreateItemDto = CreateItemDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Item Title'
+    }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateItemDto.prototype, "itemTitle", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Item Description'
+    }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateItemDto.prototype, "itemDescription", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Item Initial Quantity'
+    }),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)
 ], CreateItemDto.prototype, "initialQty", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Item Current Quantity'
+    }),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)
 ], CreateItemDto.prototype, "CurentQty", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Item Price'
+    }),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)
 ], CreateItemDto.prototype, "itemPrice", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Item Image'
+    }),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)
 ], CreateItemDto.prototype, "itemImage", void 0);

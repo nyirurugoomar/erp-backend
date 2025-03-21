@@ -29,7 +29,6 @@ let AuthGuard = class AuthGuard {
             const decoded = this.jwtService.verify(token, { secret: process.env.JWT_SECRET });
             console.log('Decoded Token:', decoded);
             request.user = decoded;
-            request.name = decoded;
             return true;
         }
         catch (error) {

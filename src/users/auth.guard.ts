@@ -7,7 +7,6 @@ dotenv.config(); // Load environment variables
 
 interface AuthenticatedRequest extends Request {
   user?: any;
-  name?: any;
 
 }
 
@@ -31,7 +30,7 @@ export class AuthGuard implements CanActivate {
 
       console.log('Decoded Token:', decoded);
       request.user = decoded;
-      request.name = decoded;
+      
       return true;
     } catch (error) {
       console.error('JWT Error:', error.message);
