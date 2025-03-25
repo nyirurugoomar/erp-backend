@@ -13,6 +13,8 @@ const users_controller_1 = require("./users.controller");
 const user_schema_1 = require("./schemas/user.schema");
 const mongoose_1 = require("@nestjs/mongoose");
 const jwt_1 = require("@nestjs/jwt");
+const cache_manager_1 = require("@nestjs/cache-manager");
+const redisStore = require("cache-manager-ioredis");
 let UsersModule = class UsersModule {
 };
 exports.UsersModule = UsersModule;
@@ -22,6 +24,12 @@ exports.UsersModule = UsersModule = __decorate([
             jwt_1.JwtModule.register({
                 secret: 'JWT_SECRET',
                 signOptions: { expiresIn: '1h' },
+            }),
+            cache_manager_1.CacheModule.register({
+                store: redisStore,
+                host: 'localhost',
+                port: 3000,
+                ttl: 600,
             }),
         ],
         providers: [users_service_1.UsersService],
