@@ -1,14 +1,16 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {  Injectable, NotFoundException,Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { Item } from './schemas/item.schema';
 import { CreateItemDto } from './dto/create-item.dto';
-
+import { Cache } from 'cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 @Injectable()
 export class ItemsService {
     constructor(
         @InjectModel(Item.name)
-        private itemModel:Model<Item>
+        private itemModel:Model<Item>,
+        @Inject(CACHE_MANAGER) private cacheManager: Cache,
     ){}
 
     async getAllItems(
@@ -17,9 +19,15 @@ export class ItemsService {
         page: number = 1,
         limit: number = 10
     ): Promise<{ items: Item[]; total: number; page: number; totalPages: number }> {
+        const cacheKey = `items:${user.email}:${search || ''}:${page}:${limit}`;
+        const cachedItems = await this.cacheManager.get(cacheKey);
+
+    if (cachedItems) {
+      return cachedItems as any;
+    }
         const filter: any = { 'createdBy.email': user.email };
         if (search) {
-            filter.name = { $regex: search, $options: 'i' }; // Case-insensitive search
+            filter.name = { $regex: search, $options: 'i' }; 
         }
 
         const total = await this.itemModel.countDocuments(filter);
@@ -31,12 +39,17 @@ export class ItemsService {
             .limit(limit)
             .exec();
 
-        return { items, total, page, totalPages };
+            const response = { items, total, page, totalPages };
+    
+            // Store in cache for 10 minutes
+            await this.cacheManager.set(cacheKey, response);
+        
+            return response;
     }
 
     async createItem(item:CreateItemDto,user: { name: string; email: string }): Promise<{message:string; item:Item}>{
         const createItem = await this.itemModel.create({ ...item, createdBy: user })
-
+        await this.cacheManager.del(`items:${user.email}`);
         return{
             message:'Item created successfully',
             item:createItem
@@ -45,12 +58,21 @@ export class ItemsService {
 
     // get item by ID
     async getItemById(id: string, user: { email: string }): Promise<Item> {
+        const cacheKey = `item:${id}`;
+        const cachedItem = await this.cacheManager.get(cacheKey);
+
+    if (cachedItem) {
+      return cachedItem as Item;
+    }
+
         const item = await this.itemModel.findOne({ _id: id, 'createdBy.email': user.email }).exec();
         
         if (!item) {
             throw new NotFoundException('Item not found');
         }
-        return item;
+        await this.cacheManager.set(cacheKey, item);
+
+    return item;
     }
 
     // update item
@@ -64,6 +86,8 @@ export class ItemsService {
         if (!updatedItem) {
             throw new NotFoundException('Item not found or not authorized');
         }
+        await this.cacheManager.del(`item:${id}`);
+        await this.cacheManager.del(`items:${user.email}`);
     
         return { message: 'Item updated successfully', item: updatedItem };
     }
@@ -74,6 +98,8 @@ export class ItemsService {
         if(!deleteItem){
             throw new NotFoundException('Item not found')
         }
+        await this.cacheManager.del(`item:${id}`);
+        await this.cacheManager.del(`items:${deleteItem.createdBy.email}`);    
         return{
             message:'Item delete successfully',
             item:deleteItem

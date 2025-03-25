@@ -8,6 +8,8 @@ import { ItemsModule } from './items/items.module';
 import { InvoiceModule } from './invoice/invoice.module';
 import { CustomerModule } from './customer/customer.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-ioredis';
 
 @Module({
 
@@ -24,6 +26,13 @@ import { ThrottlerModule } from '@nestjs/throttler';
       envFilePath:'.env',
       isGlobal: true,
      }),
+     CacheModule.register({
+      store: redisStore as unknown as CacheStorage,
+      host: 'localhost', 
+      port: 6379,        
+      ttl: 600,          
+    }),
+     
      MongooseModule.forRoot(process.env.DB_URI),
     
     UsersModule,

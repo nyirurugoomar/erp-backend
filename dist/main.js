@@ -14,8 +14,8 @@ async function bootstrap() {
         .setVersion('1.0')
         .addBearerAuth()
         .build();
-    const documentFactory = () => swagger_1.SwaggerModule.createDocument(app, config);
-    swagger_1.SwaggerModule.setup('/', app, documentFactory);
+    const document = () => swagger_1.SwaggerModule.createDocument(app, config);
+    swagger_1.SwaggerModule.setup('api', app, document);
     const PORT = process.env.PORT || 3004;
     app.enableCors();
     app.use((0, helmet_1.default)());

@@ -17,11 +17,18 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const item_schema_1 = require("./schemas/item.schema");
+const cache_manager_1 = require("@nestjs/cache-manager");
 let ItemsService = class ItemsService {
-    constructor(itemModel) {
+    constructor(itemModel, cacheManager) {
         this.itemModel = itemModel;
+        this.cacheManager = cacheManager;
     }
     async getAllItems(user, search, page = 1, limit = 10) {
+        const cacheKey = `items:${user.email}:${search || ''}:${page}:${limit}`;
+        const cachedItems = await this.cacheManager.get(cacheKey);
+        if (cachedItems) {
+            return cachedItems;
+        }
         const filter = { 'createdBy.email': user.email };
         if (search) {
             filter.name = { $regex: search, $options: 'i' };
@@ -33,20 +40,29 @@ let ItemsService = class ItemsService {
             .skip((page - 1) * limit)
             .limit(limit)
             .exec();
-        return { items, total, page, totalPages };
+        const response = { items, total, page, totalPages };
+        await this.cacheManager.set(cacheKey, response);
+        return response;
     }
     async createItem(item, user) {
         const createItem = await this.itemModel.create({ ...item, createdBy: user });
+        await this.cacheManager.del(`items:${user.email}`);
         return {
             message: 'Item created successfully',
             item: createItem
         };
     }
     async getItemById(id, user) {
+        const cacheKey = `item:${id}`;
+        const cachedItem = await this.cacheManager.get(cacheKey);
+        if (cachedItem) {
+            return cachedItem;
+        }
         const item = await this.itemModel.findOne({ _id: id, 'createdBy.email': user.email }).exec();
         if (!item) {
             throw new common_1.NotFoundException('Item not found');
         }
+        await this.cacheManager.set(cacheKey, item);
         return item;
     }
     async updateItemById(id, item, user) {
@@ -54,6 +70,8 @@ let ItemsService = class ItemsService {
         if (!updatedItem) {
             throw new common_1.NotFoundException('Item not found or not authorized');
         }
+        await this.cacheManager.del(`item:${id}`);
+        await this.cacheManager.del(`items:${user.email}`);
         return { message: 'Item updated successfully', item: updatedItem };
     }
     async deleteItemById(id) {
@@ -61,6 +79,8 @@ let ItemsService = class ItemsService {
         if (!deleteItem) {
             throw new common_1.NotFoundException('Item not found');
         }
+        await this.cacheManager.del(`item:${id}`);
+        await this.cacheManager.del(`items:${deleteItem.createdBy.email}`);
         return {
             message: 'Item delete successfully',
             item: deleteItem
@@ -71,6 +91,7 @@ exports.ItemsService = ItemsService;
 exports.ItemsService = ItemsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(item_schema_1.Item.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __param(1, (0, common_1.Inject)(cache_manager_1.CACHE_MANAGER)),
+    __metadata("design:paramtypes", [mongoose_2.Model, Object])
 ], ItemsService);
 //# sourceMappingURL=items.service.js.map

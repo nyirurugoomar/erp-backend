@@ -15,6 +15,8 @@ const mongoose_1 = require("@nestjs/mongoose");
 const jwt_1 = require("@nestjs/jwt");
 const core_1 = require("@nestjs/core");
 const throttler_1 = require("@nestjs/throttler");
+const cache_manager_1 = require("@nestjs/cache-manager");
+const redisStore = require("cache-manager-ioredis");
 let InvoiceModule = class InvoiceModule {
 };
 exports.InvoiceModule = InvoiceModule;
@@ -24,6 +26,12 @@ exports.InvoiceModule = InvoiceModule = __decorate([
             jwt_1.JwtModule.register({
                 secret: 'JWT_SECRET',
                 signOptions: { expiresIn: '1h' },
+            }),
+            cache_manager_1.CacheModule.register({
+                store: redisStore,
+                host: 'localhost',
+                port: 6379,
+                ttl: 600,
             }),
         ],
         controllers: [invoice_controller_1.InvoiceController],

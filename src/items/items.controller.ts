@@ -8,32 +8,37 @@ import {
   Put,
   UseGuards,
   Req,
-  Query
+  Query,
+  
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { Item } from './schemas/item.schema';
 import { CreateItemDto } from './dto/create-item.dto';
 import { AuthGuard } from '../users/auth.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth,ApiQuery } from '@nestjs/swagger';
 
 @ApiBearerAuth()
 @Controller('items')
 export class ItemsController {
   constructor(private itemService: ItemsService) {}
 
-  
+   
   @UseGuards(AuthGuard)
-  async getAllItems(
-    @Req() req: Request & { user?: { email: string; name: string } },
-    @Query('search') search?: string,
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10
-  ) {
-    if (!req.user) {
-      throw new Error('User not found in request'); // Debugging step
-    }
-    return this.itemService.getAllItems(req.user, search, Number(page), Number(limit));
+@Get()
+@ApiQuery({ name: 'search', required: false })
+@ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+@ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
+async getAllItems(
+  @Req() req: Request & { user?: { email: string; name: string } },
+  @Query('search') search?: string,
+  @Query('page') page?: number,
+  @Query('limit') limit?: number
+) {
+  if (!req.user) {
+    throw new Error('User not found in request'); // Debugging step
   }
+  return this.itemService.getAllItems(req.user, search, Number(page) || 1, Number(limit) || 10);
+}
 
   @UseGuards(AuthGuard)
   @Post()

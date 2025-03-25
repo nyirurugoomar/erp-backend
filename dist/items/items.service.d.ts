@@ -1,9 +1,11 @@
 import { Model } from 'mongoose';
 import { Item } from './schemas/item.schema';
 import { CreateItemDto } from './dto/create-item.dto';
+import { Cache } from 'cache-manager';
 export declare class ItemsService {
     private itemModel;
-    constructor(itemModel: Model<Item>);
+    private cacheManager;
+    constructor(itemModel: Model<Item>, cacheManager: Cache);
     getAllItems(user: {
         email: string;
         name: string;

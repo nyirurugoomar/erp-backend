@@ -28,7 +28,7 @@ exports.UsersModule = UsersModule = __decorate([
             cache_manager_1.CacheModule.register({
                 store: redisStore,
                 host: 'localhost',
-                port: 3000,
+                port: 6380,
                 ttl: 600,
             }),
         ],

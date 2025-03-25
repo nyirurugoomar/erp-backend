@@ -23,11 +23,11 @@ let ItemsController = class ItemsController {
     constructor(itemService) {
         this.itemService = itemService;
     }
-    async getAllItems(req, search, page = 1, limit = 10) {
+    async getAllItems(req, search, page, limit) {
         if (!req.user) {
             throw new Error('User not found in request');
         }
-        return this.itemService.getAllItems(req.user, search, Number(page), Number(limit));
+        return this.itemService.getAllItems(req.user, search, Number(page) || 1, Number(limit) || 10);
     }
     async createItem(createItem, req) {
         return await this.itemService.createItem(createItem, req.user);
@@ -45,6 +45,10 @@ let ItemsController = class ItemsController {
 exports.ItemsController = ItemsController;
 __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.Get)(),
+    (0, swagger_1.ApiQuery)({ name: 'search', required: false }),
+    (0, swagger_1.ApiQuery)({ name: 'page', required: false, type: Number, example: 1 }),
+    (0, swagger_1.ApiQuery)({ name: 'limit', required: false, type: Number, example: 10 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Query)('search')),
     __param(2, (0, common_1.Query)('page')),

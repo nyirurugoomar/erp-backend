@@ -14,9 +14,9 @@ import * as redisStore from 'cache-manager-ioredis';
   }),
   CacheModule.register({
     store: redisStore,
-    host: 'localhost', // Change if Redis is running on a different host
-    port: 3000,        // Default Redis port
-    ttl: 600,          // Cache expiration time (seconds)
+    host: 'localhost', 
+    port: 6380,        
+    ttl: 600,          
   }),
 ],
   providers: [UsersService],

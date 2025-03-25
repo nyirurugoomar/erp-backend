@@ -17,21 +17,36 @@ const common_1 = require("@nestjs/common");
 const invoice_schema_1 = require("./schemas/invoice.schema");
 const mongoose_1 = require("mongoose");
 const mongoose_2 = require("@nestjs/mongoose");
+const cache_manager_1 = require("@nestjs/cache-manager");
 let InvoiceService = class InvoiceService {
-    constructor(invoiceModel) {
+    constructor(invoiceModel, cacheManager) {
         this.invoiceModel = invoiceModel;
+        this.cacheManager = cacheManager;
     }
     async getAllInvoice(user) {
-        return await this.invoiceModel.find({ 'createdBy': user.email }).exec();
+        const cacheKey = `invoice:${user.email}`;
+        const cachedInvoice = await this.cacheManager.get(cacheKey);
+        if (cachedInvoice) {
+            return cachedInvoice;
+        }
+        const invoice = await this.invoiceModel.find({ 'createdBy.email': user.email }).exec();
+        await this.cacheManager.set(cacheKey, invoice);
+        return invoice;
     }
     async createInvoice(invoice, user) {
         const createInvoice = await this.invoiceModel.create({ ...invoice, createdBy: user.email });
+        await this.cacheManager.del(`invoice:${user.email}`);
         return {
             message: 'Invoice created successfully',
             invoice: createInvoice
         };
     }
     async getInvoice(id, user) {
+        const cacheKey = `invoice:${id}`;
+        const cachedInvoice = await this.cacheManager.get(cacheKey);
+        if (cachedInvoice) {
+            return cachedInvoice;
+        }
         if (!mongoose_1.default.Types.ObjectId.isValid(id)) {
             throw new common_1.BadRequestException('Invalid ID format');
         }
@@ -39,6 +54,7 @@ let InvoiceService = class InvoiceService {
         if (!invoice) {
             throw new common_1.BadRequestException('Invoice not found');
         }
+        await this.cacheManager.set(cacheKey, invoice);
         return invoice;
     }
     async updateInvoiceById(id, invoice, user) {
@@ -49,6 +65,8 @@ let InvoiceService = class InvoiceService {
         if (!updateInvoice) {
             throw new common_1.BadRequestException('Invoice not found');
         }
+        await this.cacheManager.del(`invoice:${id}`);
+        await this.cacheManager.del(`invoice:${user.email}`);
         return {
             message: 'Invoice updated successfully',
             invoice: updateInvoice
@@ -59,6 +77,8 @@ let InvoiceService = class InvoiceService {
         if (!deleteInvoice) {
             throw new common_1.BadRequestException('Invoice not found');
         }
+        await this.cacheManager.del(`invoice:${id}`);
+        await this.cacheManager.del(`invoice:${user.email}`);
         return {
             message: 'Invoice deleted successfully',
             invoice: deleteInvoice
@@ -69,6 +89,7 @@ exports.InvoiceService = InvoiceService;
 exports.InvoiceService = InvoiceService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_2.InjectModel)(invoice_schema_1.Invoice.name)),
-    __metadata("design:paramtypes", [mongoose_1.Model])
+    __param(1, (0, common_1.Inject)(cache_manager_1.CACHE_MANAGER)),
+    __metadata("design:paramtypes", [mongoose_1.Model, Object])
 ], InvoiceService);
 //# sourceMappingURL=invoice.service.js.map

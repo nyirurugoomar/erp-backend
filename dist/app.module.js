@@ -17,6 +17,8 @@ const items_module_1 = require("./items/items.module");
 const invoice_module_1 = require("./invoice/invoice.module");
 const customer_module_1 = require("./customer/customer.module");
 const throttler_1 = require("@nestjs/throttler");
+const cache_manager_1 = require("@nestjs/cache-manager");
+const redisStore = require("cache-manager-ioredis");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -34,6 +36,12 @@ exports.AppModule = AppModule = __decorate([
             config_1.ConfigModule.forRoot({
                 envFilePath: '.env',
                 isGlobal: true,
+            }),
+            cache_manager_1.CacheModule.register({
+                store: redisStore,
+                host: 'localhost',
+                port: 6379,
+                ttl: 600,
             }),
             mongoose_1.MongooseModule.forRoot(process.env.DB_URI),
             users_module_1.UsersModule,

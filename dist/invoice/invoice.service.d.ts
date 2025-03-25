@@ -1,9 +1,11 @@
 import { Invoice } from './schemas/invoice.schema';
 import { Model } from 'mongoose';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
+import { Cache } from 'cache-manager';
 export declare class InvoiceService {
     private invoiceModel;
-    constructor(invoiceModel: Model<Invoice>);
+    private cacheManager;
+    constructor(invoiceModel: Model<Invoice>, cacheManager: Cache);
     getAllInvoice(user: {
         email: string;
         name: string;
