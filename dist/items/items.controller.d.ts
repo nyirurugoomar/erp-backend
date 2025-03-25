@@ -9,7 +9,7 @@ export declare class ItemsController {
             email: string;
             name: string;
         };
-    }, search?: string, page?: number, limit?: number): Promise<{
+    }, search?: string, page?: string, limit?: string): Promise<{
         items: Item[];
         total: number;
         page: number;
@@ -24,5 +24,5 @@ export declare class ItemsController {
         message: string;
         item: Item;
     }>;
-    deleteItem(id: string): Promise<any>;
+    deleteItem(id: string, req: any): Promise<any>;
 }

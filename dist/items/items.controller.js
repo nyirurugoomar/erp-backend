@@ -38,23 +38,20 @@ let ItemsController = class ItemsController {
     async updateItem(id, item, req) {
         return this.itemService.updateItemById(id, item, req.user);
     }
-    async deleteItem(id) {
-        return await this.itemService.deleteItemById(id);
+    async deleteItem(id, req) {
+        return await this.itemService.deleteItemById(id, req.user);
     }
 };
 exports.ItemsController = ItemsController;
 __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Get)(),
-    (0, swagger_1.ApiQuery)({ name: 'search', required: false }),
-    (0, swagger_1.ApiQuery)({ name: 'page', required: false, type: Number, example: 1 }),
-    (0, swagger_1.ApiQuery)({ name: 'limit', required: false, type: Number, example: 10 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Query)('search')),
     __param(2, (0, common_1.Query)('page')),
     __param(3, (0, common_1.Query)('limit')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, Number, Number]),
+    __metadata("design:paramtypes", [Object, String, String, String]),
     __metadata("design:returntype", Promise)
 ], ItemsController.prototype, "getAllItems", null);
 __decorate([
@@ -89,8 +86,9 @@ __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], ItemsController.prototype, "deleteItem", null);
 exports.ItemsController = ItemsController = __decorate([

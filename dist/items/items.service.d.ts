@@ -25,11 +25,16 @@ export declare class ItemsService {
     getItemById(id: string, user: {
         email: string;
     }): Promise<Item>;
-    updateItemById(id: string, item: Item, user: {
+    updateItemById(id: string, item: Partial<Item>, user: {
         email: string;
     }): Promise<{
         message: string;
         item: Item;
     }>;
-    deleteItemById(id: string): Promise<any>;
+    deleteItemById(id: string, user: {
+        email: string;
+    }): Promise<{
+        message: string;
+        item: Item;
+    }>;
 }

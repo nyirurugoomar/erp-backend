@@ -23,22 +23,26 @@ export class ItemsController {
   constructor(private itemService: ItemsService) {}
 
    
-  @UseGuards(AuthGuard)
-@Get()
-@ApiQuery({ name: 'search', required: false })
-@ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
-@ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
-async getAllItems(
-  @Req() req: Request & { user?: { email: string; name: string } },
-  @Query('search') search?: string,
-  @Query('page') page?: number,
-  @Query('limit') limit?: number
-) {
-  if (!req.user) {
-    throw new Error('User not found in request'); // Debugging step
-  }
-  return this.itemService.getAllItems(req.user, search, Number(page) || 1, Number(limit) || 10);
-}
+  @UseGuards(AuthGuard) 
+    @Get()
+    async getAllItems(
+        @Req() req: Request & { user?: { email: string; name: string } },
+        @Query('search') search?: string,
+        @Query('page') page?: string,
+        @Query('limit') limit?: string
+    ) {
+        // Ensure the user is available in the request
+        if (!req.user) {
+            throw new Error('User not found in request');
+        }
+
+        return this.itemService.getAllItems(
+            req.user,
+            search,
+            Number(page) || 1,
+            Number(limit) || 10
+        );
+    }
 
   @UseGuards(AuthGuard)
   @Post()
@@ -67,11 +71,8 @@ async getAllItems(
   }
 
   @UseGuards(AuthGuard)
-  @Delete(':id')
-  async deleteItem(
-    @Param('id')
-    id: string,
-  ): Promise<any> {
-    return await this.itemService.deleteItemById(id);
-  }
+@Delete(':id')
+async deleteItem(@Param('id') id: string, @Req() req): Promise<any> {
+    return await this.itemService.deleteItemById(id, req.user);
+}
 }

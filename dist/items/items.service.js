@@ -31,7 +31,10 @@ let ItemsService = class ItemsService {
         }
         const filter = { 'createdBy.email': user.email };
         if (search) {
-            filter.name = { $regex: search, $options: 'i' };
+            filter.$or = [
+                { itemTitle: { $regex: search, $options: 'i' } },
+                { itemDescription: { $regex: search, $options: 'i' } }
+            ];
         }
         const total = await this.itemModel.countDocuments(filter);
         const totalPages = Math.ceil(total / limit);
@@ -74,15 +77,15 @@ let ItemsService = class ItemsService {
         await this.cacheManager.del(`items:${user.email}`);
         return { message: 'Item updated successfully', item: updatedItem };
     }
-    async deleteItemById(id) {
-        const deleteItem = await this.itemModel.findByIdAndDelete(id);
+    async deleteItemById(id, user) {
+        const deleteItem = await this.itemModel.findOneAndDelete({ _id: id, 'createdBy.email': user.email });
         if (!deleteItem) {
-            throw new common_1.NotFoundException('Item not found');
+            throw new common_1.NotFoundException('Item not found or not authorized');
         }
         await this.cacheManager.del(`item:${id}`);
-        await this.cacheManager.del(`items:${deleteItem.createdBy.email}`);
+        await this.cacheManager.del(`items:${user.email}`);
         return {
-            message: 'Item delete successfully',
+            message: 'Item deleted successfully',
             item: deleteItem
         };
     }
