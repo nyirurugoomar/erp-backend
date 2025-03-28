@@ -46,6 +46,9 @@ exports.ItemsController = ItemsController;
 __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Get)(),
+    (0, swagger_1.ApiQuery)({ name: 'search', required: false, description: 'Search keyword' }),
+    (0, swagger_1.ApiQuery)({ name: 'page', required: false, description: 'Page number', type: Number }),
+    (0, swagger_1.ApiQuery)({ name: 'limit', required: false, description: 'Limit per page', type: Number }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Query)('search')),
     __param(2, (0, common_1.Query)('page')),

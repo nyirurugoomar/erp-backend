@@ -25,6 +25,9 @@ export class ItemsController {
    
   @UseGuards(AuthGuard) 
     @Get()
+    @ApiQuery({ name: 'search', required: false, description: 'Search keyword' })
+    @ApiQuery({ name: 'page', required: false, description: 'Page number', type: Number })
+    @ApiQuery({ name: 'limit', required: false, description: 'Limit per page', type: Number })
     async getAllItems(
         @Req() req: Request & { user?: { email: string; name: string } },
         @Query('search') search?: string,
